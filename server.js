@@ -6,9 +6,15 @@ const app = express();
 app.use(cors({ origin: "https://vile.lat" }));
 
 app.get("/api/user", async (req, res) => {
-  const response = await fetch("http://noel.hidencloud.com:24580/api/user");
-  const data = await response.json();
-  res.json(data);
+  try {
+    const response = await fetch("http://noel.hidencloud.com:24580/api/user");
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Proxy failed to connect" });
+  }
 });
 
-app.listen(10000, () => console.log("Proxy running on port 10000"));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
